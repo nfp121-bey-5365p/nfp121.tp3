@@ -4,127 +4,182 @@ import question1.PilePleineException;
 import question1.PileVideException;
 
 import java.util.Stack;
-
 public class Pile4 implements PileI, Cloneable {
-	/** la liste des Maillons/Elements */
-	private Maillon stk;
-	/** la capacitÃ© de la pile */
-	private int capacite;
-	/** le nombre */
-	private int nombre;
+    /** la liste des Maillons/Elements */
+    private Maillon stk;
+    /** la capacité de la pile */
+    private int capacite;
+    /** le nombre */
+    private int nombre;
 
-	/**
-	 * Classe interne "statique" contenant chaque Ã©lÃ©ment de la chaine c'est une
-	 * proposition, vous pouvez l'ignorer !
-	 */
-	private static class Maillon implements Cloneable {
-		private Object element;
-		private Maillon suivant;
+    /**
+     * Classe interne "statique" contenant chaque élément de la chaine c'est une
+     * proposition, vous pouvez l'ignorer !
+     */
+    private static class Maillon implements Cloneable {
+        private Object element;
+        private Maillon suivant;
 
-		public Maillon(Object element, Maillon suivant) {
-			this.element = element;
-			this.suivant = suivant;
-		}
+        public Maillon(Object element, Maillon suivant) {
+            this.element = element;
+            this.suivant = suivant;
+        }
 
-		public Maillon suivant() {
-			return this.suivant;
-		}
+        public Maillon suivant() {
+            return this.suivant;
+        }
 
-		public Object element() {
-			return this.element;
-		}
+        /** Teste si un suivant.
+         * Méthode qui facilite le toString()
+         * en testant si un suivant existe
+         */
+        public boolean hasNext(){
+            return this.suivant != null;
+        }
 
-		public Object clone() throws CloneNotSupportedException {
-			Maillon m = (Maillon) super.clone();
-			m.element = element;
-			return m;
-		}
-	}
+        public Object element() {
+            return this.element;
+        }
 
-	/**
-	 * CrÃ©ation d'une pile.
-	 * 
-	 * @param taille
-	 *            la taille de la pile, la taille doit Ãªtre > 0
-	 */
-	public Pile4(int taille) {
-		if (taille <= 0)
-			taille = CAPACITE_PAR_DEFAUT;
-		this.stk = null;
-		this.capacite = taille;
-	}
+        public Object clone() throws CloneNotSupportedException {
+            Maillon m = (Maillon) super.clone();
+            m.element = element;
+            return m;
+        }
+    }
 
-	public Pile4() {
-		this(PileI.CAPACITE_PAR_DEFAUT);
-	}
+    /**
+     * Création d'une pile.
+     * 
+     * @param taille
+     *            la taille de la pile, la taille doit être > 0
+     */
+    public Pile4(int taille) {
+        if (taille <= 0)
+            taille = CAPACITE_PAR_DEFAUT;
+        this.stk = null;
+        this.capacite = taille;
+    }
 
-	public void empiler(Object o) throws PilePleineException {
-		if (estPleine())
-			throw new PilePleineException();
-		// Ã  complÃ©ter
-	}
+    public Pile4() {
+        this(PileI.CAPACITE_PAR_DEFAUT);
+    }
 
-	public Object depiler() throws PileVideException {
-		if (estVide())
-			throw new PileVideException();
-		// Ã  complÃ©ter
-		return null;
-	}
+    /**
+     * empiler à la pile un élément en paramètre.
+     * @Param o
+     *      objet à empiler dans la pile
+     * @throw PilePleineException
+     *      -si pile est pleine, ne peut pas empiler
+     */
+    public void empiler(Object o) throws PilePleineException {
+        if (estPleine())
+            throw new PilePleineException();
+        stk = new Maillon (o,stk);     
+        this.nombre++;            
+    }
 
-	public Object sommet() throws PileVideException {
-		if (estVide())
-			throw new PileVideException();
-		return null; // Ã  complÃ©ter
-	}
+    /**
+     * depiler supprime de la pile le dernier objet entré, 
+     * retourne cet objet.
+     * @return Object 
+     * @throw PileVideException
+     *      -si pile n'a aucun élémnet
+     */
+    public Object depiler() throws PileVideException {
+        if (estVide())
+            throw new PileVideException();
+        Maillon tmp = this.stk;
+        this.stk = this.stk.suivant;
+        nombre--;
+        return tmp.element;
+    }
 
-	/**
-	 * Effectue un test de l'Ã©tat de la pile.
-	 * 
-	 * @return vrai si la pile est vide, faux autrement
-	 */
-	public boolean estVide() {
-		return false; // Ã  complÃ©ter
-	}
+    public Object sommet() throws PileVideException {
+        if (estVide())
+            throw new PileVideException();
+        return stk.element ;
+    }
 
-	/**
-	 * Effectue un test de l'Ã©tat de la pile.
-	 * 
-	 * @return vrai si la pile est pleine, faux autrement
-	 */
-	public boolean estPleine() {
-		return false; // Ã  complÃ©ter
-	}
+    /**
+     * Effectue un test de l'état de la pile.
+     * 
+     * @return vrai si la pile est vide, faux autrement
+     */
+    public boolean estVide() {
+        return stk == null; 
+    }
 
-	/**
-	 * Retourne une reprÃ©sentation en String d'une pile, contenant la
-	 * reprÃ©sentation en String de chaque Ã©lÃ©ment.
-	 * 
-	 * @return une reprÃ©sentation en String d'une pile
-	 */
-	public String toString() {
+    /**
+     * Effectue un test de l'état de la pile.
+     * 
+     * @return vrai si la pile est pleine, faux autrement
+     */
+    public boolean estPleine() {
+        return this.taille() >= capacite; 
+    }
 
-		String s = "[";
-		// Ã  complÃ©ter
-		return s + "]";
-	}
+    /**
+     * Retourne une représentation en String d'une pile, contenant la
+     * représentation en String de chaque élément.
+     * 
+     * @return une représentation en String d'une pile
+     * Utilise la méthode hasNext() de Maillon
+     */
+    public String toString() {
+        String s = "[";
+        Maillon tmp = stk;
+        while (tmp != null){
+            s = s + tmp.element() ;
+            tmp = tmp.suivant();
+            if (tmp !=null) {s = s + ", ";}  
+        }  
+        return s + "]"; 
+    }
 
-	public boolean equals(Object o) {
-		if (o instanceof Pile4) {
-			// Ã  complÃ©ter
-			return false;
-		}
-		return false;
-	}
+   
+    public boolean equals(Object o) {
+        boolean b = true;
+        Pile4 p1;
+        if (o instanceof Pile4) {
+            p1 = (Pile4)o;
+            Maillon m1;
+            Maillon m2;
+            try{
+                if (p1.taille() == this.taille() && p1.capacite() == this.capacite()){
+                m1 = stk;
+                m2 = p1.stk;
+                    for (int i = this.nombre - 1; i >= 0; i--) {
+                        if(!(m1.element() == m2.element())){
+                            b = false;
+                        }
+                        m1 = m1.suivant();
+                        m2 = m2.suivant();
+                    }
+                }
+                else{
+                    b = false;
+                }
+            }catch (Exception e){
+                b = false;
+            }
+            
+        }else{
+            b = false;
+        }
+        return b;
+    }
 
-	public int capacite() {
-		return this.capacite;
-	}
 
-	public int hashCode() {
-		return toString().hashCode();
-	}
+    public int capacite() {
+        return this.capacite;
+    }
 
-	public int taille() {
-		return nombre;
-	}
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    public int taille() {
+        return nombre;
+    }
 }
